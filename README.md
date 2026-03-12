@@ -1,6 +1,8 @@
 # Image Playground Skill
 
-Codex skills for generating images with a ChatGPT subscription on macOS.
+Skills for generating images with a ChatGPT subscription on macOS.
+
+This repo is not specific to Codex. It is meant for any CLI or IDE that supports installing and invoking skills from a GitHub repository.
 
 This repo includes two skills:
 
@@ -9,19 +11,21 @@ This repo includes two skills:
 
 ## Install
 
-Codex on macOS 26+:
+If your tool supports [`npx skills`](https://www.npmjs.com/package/skills), install directly from GitHub and choose the skill you want.
+
+Example for macOS 26+:
 
 ```bash
 npx skills add kylewhirl/image-playground-skill --skill image-playground -g -a codex -y
 ```
 
-Codex on macOS 15:
+Example for macOS 15:
 
 ```bash
 npx skills add kylewhirl/image-playground-skill --skill chatgpt-subscription-image-gen -g -a codex -y
 ```
 
-If you use another provider supported by `npx skills`, replace `-a codex` with that provider's agent name.
+If your environment is not Codex, replace `-a codex` with the agent/provider name supported by your skills installer.
 
 ## macOS 26: Image Playground
 
