@@ -64,3 +64,9 @@ The legacy skill lives in:
 
 - `image-playground/`: macOS 26+ Image Playground skill
 - `chatgpt-subscription-image-gen/`: macOS 15 legacy ChatGPT shortcut skill
+
+## Responsible Use
+
+- Use these skills in accordance with OpenAI's terms and the terms for any connected app or platform.
+- Do not use these skills to evade usage limits, rate limits, access controls, or account restrictions.
+- Do not modify these skills to automate prohibited behavior, abusive bulk generation, or other actions that violate platform policies.
