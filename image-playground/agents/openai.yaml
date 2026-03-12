@@ -1,0 +1,6 @@
+interface:
+  display_name: "Image Playground"
+  short_description: "macOS 26 image generation shortcut flow"
+  icon_small: "./assets/image-playground.jpeg"
+  icon_large: "./assets/image-playground.jpeg"
+  default_prompt: "Use $image-playground to run the Image Playground Skill shortcut and save the returned image directly to disk."
