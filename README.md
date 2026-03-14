@@ -6,20 +6,20 @@ This repo is not specific to Codex. It is meant for any CLI or IDE that supports
 
 This repo includes two skills:
 
-- `image-playground`: the macOS 26+ path using the `Image Playground Skill` shortcut
+- `image-playground`: the recommended skill, with a macOS 26+ Image Playground primary path and a macOS 15 fallback path
 - `chatgpt-subscription-image-gen`: the macOS 15 legacy path using the `Image gen` shortcut plus Playwright
 
 ## Install
 
 If your tool supports [`npx skills`](https://www.npmjs.com/package/skills), install directly from GitHub and choose the skill you want.
 
-Example for macOS 26+:
+Recommended install for most users:
 
 ```bash
 npx skills add kylewhirl/image-playground-skill --skill image-playground -g -a codex -y
 ```
 
-Example for macOS 15:
+Install the dedicated macOS 15 legacy skill only if you want that path on its own:
 
 ```bash
 npx skills add kylewhirl/image-playground-skill --skill chatgpt-subscription-image-gen -g -a codex -y
@@ -29,7 +29,10 @@ If your environment is not Codex, replace `-a codex` with the agent/provider nam
 
 ## macOS 26: Image Playground
 
-Use the `image-playground` skill on macOS 26 or newer.
+Use the `image-playground` skill for both cases:
+
+- macOS 26+: primary Image Playground path
+- macOS 15 or macOS 26 failures: fallback `Image gen` path
 
 Prerequisites:
 
