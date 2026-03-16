@@ -1,6 +1,6 @@
 ---
 name: image-playground
-description: Use when Codex should generate or edit an image on macOS by preferring the macOS 26+ `Image Playground Skill` shortcut and falling back to the macOS 15 `Image gen` shortcut plus Playwright when the newer path is unavailable or fails.
+description: Use when Codex should generate or edit an image on macOS by preferring the macOS 26+ `Image Playground Skill` shortcut and falling back to the macOS 15 `Image gen` shortcut plus direct extraction from the ChatGPT macOS app image cache when the newer path is unavailable or fails.
 ---
 
 # Image Playground
@@ -61,14 +61,23 @@ Requirements:
 
 - ChatGPT macOS app installed
 - ChatGPT macOS app open and logged in
-- Playwright browser profile already logged into ChatGPT
+- ChatGPT macOS app image cache available under `~/Library/Caches/com.openai.chat/com.onevcat.Kingfisher.ImageCache/`
 
 Run the generation step with:
 
 ```bash
-scripts/run_image_gen_shortcut.sh --prompt "a cozy orange cat in a sunlit window"
+scripts/run_image_gen_shortcut.sh --prompt "a cozy orange cat in a sunlit window" --output-path output/cat.png
 ```
 
-Then use the Playwright download guidance in:
+That runner:
 
-- `references/playwright-download.md`
+- runs the legacy `Image gen` shortcut
+- snapshots the ChatGPT macOS app image cache before the run
+- extracts the newest changed cache entry immediately after the shortcut succeeds
+- copies the newest cached image to the path passed with `--output-path`
+
+To inspect the cache directly without running the shortcut again:
+
+```bash
+scripts/extract_latest_chatgpt_cache_image.sh --output-path output/latest-cache-image.png
+```
