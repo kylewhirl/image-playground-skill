@@ -1,16 +1,43 @@
 ---
 name: image-playground
-description: Use when Codex should generate or edit an image on macOS by preferring the macOS 26+ `Image Playground Skill` shortcut and falling back to the macOS 15 `Image gen` shortcut plus direct extraction from the ChatGPT macOS app image cache when the newer path is unavailable or fails.
+description: Use when Codex should generate or edit an image on macOS by preferring the macOS 26+ `Image Playground Skill` shortcut and using the macOS 15 `Image gen` shortcut as backup.
 ---
 
 # Image Playground
 
-Prefer the macOS 26+ `Image Playground Skill` path first. If that path is unavailable or fails, fall back to the macOS 15 `Image gen` path in the same skill.
+## How to use
 
-## macOS 26+ primary path
+Always change into the skill directory first and run scripts as `./scripts/...`.
 
-Install the `Image Playground Skill` shortcut if needed:
-[https://www.icloud.com/shortcuts/b1370f8002e3410491331b80383af5c6](https://www.icloud.com/shortcuts/b1370f8002e3410491331b80383af5c6)
+macOS 26+ default flow:
+
+```bash
+cd /path/to/image-playground
+./scripts/run_image_playground_shortcut.sh --prompt "a cozy orange cat in a sunlit window" --style "ChatGPT" --output-path output/cat.png --output-type public.png
+```
+
+macOS 15 backup flow:
+
+```bash
+cd /path/to/image-playground
+./scripts/run_image_gen_shortcut.sh --prompt "a cozy orange cat in a sunlit window" --output-path output/cat.png
+```
+
+If the `Image gen` shortcut already ran and you only need to pull the latest cached image:
+
+```bash
+cd /path/to/image-playground
+./scripts/extract_latest_chatgpt_cache_image.sh --output-path output/latest-cache-image.png
+```
+
+## Shortcut install links
+
+- `Image Playground Skill`: [https://www.icloud.com/shortcuts/b1370f8002e3410491331b80383af5c6](https://www.icloud.com/shortcuts/b1370f8002e3410491331b80383af5c6)
+- `Image gen`: [https://www.icloud.com/shortcuts/53b4fdcffbbc4b0d9482710055b471aa](https://www.icloud.com/shortcuts/53b4fdcffbbc4b0d9482710055b471aa)
+
+## macOS 26+ default flow
+
+Use `./scripts/run_image_playground_shortcut.sh`.
 
 Requirements:
 
@@ -18,12 +45,7 @@ Requirements:
 - Image Playground available on the Mac
 - ChatGPT extension enabled inside Image Playground
 - ChatGPT extension logged into a ChatGPT account
-
-Run it with:
-
-```bash
-scripts/run_image_playground_shortcut.sh --prompt "a cozy orange cat in a sunlit window" --style "ChatGPT" --output-path output/cat.png --output-type public.png
-```
+- `Image Playground Skill` shortcut installed
 
 Available styles:
 
@@ -34,50 +56,44 @@ Available styles:
 - `Anime (ChatGPT)`
 - `Print (ChatGPT)`
 
-Expected input structure:
+Image-to-image:
 
-```json
-{
-  "prompt": "a cozy orange cat in a sunlit window",
-  "style": "ChatGPT",
-  "image_path": "/absolute/path/to/source.png"
-}
+- Use `--image-path /absolute/path/to/source.png`
+- Only use `--image-path` with `run_image_playground_shortcut.sh`
+
+Example:
+
+```bash
+cd /path/to/image-playground
+./scripts/run_image_playground_shortcut.sh --prompt "turn this into a watercolor illustration" --style "Watercolor (ChatGPT)" --image-path /absolute/path/to/source.png --output-path output/result.png --output-type public.png
 ```
 
-Pass `image_path` only when doing image-to-image generation, and use an absolute path.
+## macOS 15 backup flow
 
-The wrapper script writes that JSON to a temporary file, then runs `shortcuts run "Image Playground Skill" -i /absolute/path/to/payload.json`.
-
-If you get `There was a problem running the shortcut.`, open the ChatGPT app, confirm you are logged in, and run the shortcut manually once.
-
-## macOS 15 fallback path
-
-If you are on macOS 15, or if the Image Playground path is unavailable or fails, use the legacy `Image gen` shortcut flow bundled in this skill.
-
-Install the `Image gen` shortcut if needed:
-[https://www.icloud.com/shortcuts/53b4fdcffbbc4b0d9482710055b471aa](https://www.icloud.com/shortcuts/53b4fdcffbbc4b0d9482710055b471aa)
+Use `./scripts/run_image_gen_shortcut.sh` when the macOS 26+ path is unavailable or when you are on macOS 15.
 
 Requirements:
 
 - ChatGPT macOS app installed
-- ChatGPT macOS app open and logged in
-- ChatGPT macOS app image cache available under `~/Library/Caches/com.openai.chat/com.onevcat.Kingfisher.ImageCache/`
+- ChatGPT macOS app open
+- ChatGPT macOS app logged in
+- `Image gen` shortcut installed
+- ChatGPT app image cache available under `~/Library/Caches/com.openai.chat/...`
 
-Run the generation step with:
+## Important notes
 
-```bash
-scripts/run_image_gen_shortcut.sh --prompt "a cozy orange cat in a sunlit window" --output-path output/cat.png
-```
+- Use the wrapper scripts only. Do not call `shortcuts run ...` directly for this skill.
+- Image generation can take a while. Do not kill a running generation just because it is slow.
+- Never start a second generation while one is already running.
+- Do not use absolute paths to the skill scripts. Run them from the skill directory as `./scripts/...`.
+- The `Image gen` flow may only output status text like `Image`; the wrapper handles pulling the image from the ChatGPT app cache after that.
 
-That runner:
+## Common failures
 
-- runs the legacy `Image gen` shortcut
-- snapshots the ChatGPT macOS app image cache before the run
-- extracts the newest changed cache entry immediately after the shortcut succeeds
-- copies the newest cached image to the path passed with `--output-path`
-
-To inspect the cache directly without running the shortcut again:
-
-```bash
-scripts/extract_latest_chatgpt_cache_image.sh --output-path output/latest-cache-image.png
-```
+- The shortcut is slow: this is normal. Wait longer.
+- The ChatGPT app is not logged in: open the app and log in.
+- The shortcut is missing: install it from the links above.
+- `There was a problem running the shortcut.`: open ChatGPT, confirm login, and run the shortcut manually once if needed.
+- `no new cached ChatGPT image created after shortcut start time ...`: the shortcut finished but the app did not write a fresh cache image that the wrapper could use.
+- The cache flow grabbed the wrong image: the relevant chat may not have been opened in the app, or cache ordering may not reflect the image you wanted.
+- Image Playground fallback fails: Apple Intelligence, Image Playground, or the ChatGPT extension may not be available or ready.

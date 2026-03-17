@@ -2,6 +2,7 @@
 set -euo pipefail
 
 shortcut_name="${SHORTCUT_NAME:-Image Playground Skill}"
+tmp_root="${TMPDIR:-/tmp}"
 prompt=""
 style="ChatGPT"
 image_path=""
@@ -94,8 +95,9 @@ if [[ -z "$json_payload" ]]; then
   json_payload="$(python3 -c 'import json, sys; payload = {"prompt": sys.argv[1], "style": sys.argv[2]}; image_path = sys.argv[3]; payload["image_path"] = image_path if image_path else None; payload = {k:v for k,v in payload.items() if v is not None}; print(json.dumps(payload, separators=(",", ":")))' "$prompt" "$style" "$image_path")"
 fi
 
-payload_file="$(mktemp "${TMPDIR:-/tmp}/image-playground-payload.XXXXXX.json")"
-log_file="$(mktemp "${TMPDIR:-/tmp}/image-playground-log.XXXXXX.txt")"
+mkdir -p "$tmp_root"
+payload_file="$(mktemp "$tmp_root/image-playground-payload.XXXXXX")"
+log_file="$(mktemp "$tmp_root/image-playground-log.XXXXXX")"
 trap 'rm -f "$payload_file" "$log_file"' EXIT
 printf '%s\n' "$json_payload" >"$payload_file"
 

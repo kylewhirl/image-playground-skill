@@ -1,4 +1,0 @@
-interface:
-  display_name: "ChatGPT Image Legacy"
-  short_description: "Legacy shortcut-based ChatGPT image flow"
-  default_prompt: "Use $chatgpt-subscription-image-gen as the legacy macOS shortcut workflow to generate an image and download the newest result from ChatGPT."

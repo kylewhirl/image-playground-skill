@@ -1,6 +1,6 @@
 interface:
   display_name: "Image Playground"
-  short_description: "macOS image generation with fallback flow"
+  short_description: "macOS image generation with Image Playground first and Image gen backup"
   icon_small: "./assets/image-playground.jpeg"
   icon_large: "./assets/image-playground.jpeg"
-  default_prompt: "Use $image-playground to generate an image on macOS, preferring Image Playground and falling back to the legacy Image gen flow if needed."
+  default_prompt: "Use $image-playground from its skill directory with the wrapper scripts only. Prefer the macOS 26+ Image Playground Skill flow first, and use the macOS 15 Image gen flow as backup."
